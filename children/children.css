@@ -12,7 +12,7 @@ main.kids { width: min(760px, 100%); margin: 0 auto; padding: 20px 16px 56px; }
 .kid-note { margin-top: 18px; }
 .kids button.danger { color: var(--bad); }
 
-.kid-card, .kid-form, .kid-section > .rec, .kid-empty-card {
+.kid-card, .kid-form, .kid-backup, .kid-section > .rec, .kid-empty-card {
   background: var(--bg-elev);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -33,6 +33,10 @@ main.kids { width: min(760px, 100%); margin: 0 auto; padding: 20px 16px 56px; }
 .kid-form .form-actions { display: flex; gap: 8px; margin-top: 14px; }
 .kid-form .form-actions button { flex: 1 1 0; }
 .kid-form .small { margin: 8px 0 0; }
+
+.kid-backup { padding: 16px; margin-bottom: 16px; }
+.kid-backup p { margin: 8px 0; }
+.kid-backup button { margin: 4px 0; }
 
 .kid-picker { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
 .kid-picker label { font-weight: 700; }

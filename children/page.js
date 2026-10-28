@@ -11,6 +11,8 @@
   var submitBtn = document.getElementById('f-submit');
   var cancelBtn = document.getElementById('f-cancel');
   var formTitle = document.getElementById('form-title');
+  var exportBtn = document.getElementById('export-backup');
+  var exportStatus = document.getElementById('export-status');
   var editing = null;
 
   function el(tag, cls, text) {
@@ -114,6 +116,8 @@
   function render() {
     var kids = CC.list();
     var cur = CC.current();
+    exportBtn.disabled = !kids.length;
+    exportStatus.hidden = true;
     listBox.textContent = '';
     if (!kids.length) {
       listBox.appendChild(el('p', 'kid-empty', '还没有孩子。在下面填昵称和年级，添加第一个。'));
@@ -138,6 +142,31 @@
     render();
   });
   cancelBtn.addEventListener('click', function () { resetForm(); render(); });
+
+  exportBtn.addEventListener('click', function () {
+    var url = null;
+    var link = null;
+    try {
+      var backup = CC.exportBackup();
+      var blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json;charset=utf-8' });
+      url = URL.createObjectURL(blob);
+      link = el('a');
+      link.href = url;
+      link.download = 'children-backup-' + backup.exportedAt.replace(/[:.]/g, '-') + '.json';
+      document.body.appendChild(link);
+      link.click();
+      exportStatus.className = 'small';
+      exportStatus.textContent = '已生成备份文件，请在浏览器下载列表中查看。';
+    } catch (e) {
+      exportStatus.className = 'small err';
+      exportStatus.textContent = (e && e.message) || '导出失败，请重试。';
+    } finally {
+      if (link) link.remove();
+      // 给浏览器时间接管下载，再释放临时地址。
+      if (url) setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      exportStatus.hidden = false;
+    }
+  });
 
   resetForm();
   render();

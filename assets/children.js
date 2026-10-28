@@ -144,11 +144,39 @@
     return by;
   }
 
+  /* 备份保留完整档案与记录，不经过页面的筛选、排序或最近 40 条截取。
+   * 不能用 read() 的兜底值：读取失败时导出空数据会让用户误以为备份成功。 */
+  function exportBackup() {
+    var profiles, history;
+    try {
+      var rawProfiles = localStorage.getItem(KEY);
+      var rawRecords = localStorage.getItem(REC_KEY);
+      profiles = rawProfiles === null ? { v: 1, current: null, children: [] } : JSON.parse(rawProfiles);
+      history = rawRecords === null ? {} : JSON.parse(rawRecords);
+    } catch (e) {
+      throw new Error('无法读取档案数据，未生成备份。请检查浏览器是否允许访问本机存储，以及数据是否完整。');
+    }
+    if (!profiles || !Array.isArray(profiles.children) ||
+        !profiles.children.every(function (c) { return c && typeof c.id === 'string' && c.id; }) ||
+        !history || typeof history !== 'object' || Array.isArray(history) ||
+        !Object.keys(history).every(function (id) { return Array.isArray(history[id]); })) {
+      throw new Error('档案数据格式异常，未生成备份。');
+    }
+    if (!profiles.children.length) throw new Error('还没有可导出的孩子档案。');
+    return {
+      format: 'cn-math-taxonomy.children',
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      profiles: profiles,
+      records: history
+    };
+  }
+
   window.CnmChildren = {
     GRADES: GRADES, TEXTBOOKS: TEXTBOOKS, MAX_CHILDREN: MAX_CHILDREN,
     list: list, get: get, current: current, setCurrent: setCurrent,
     add: add, update: update, remove: remove,
     recordsOf: recordsOf, saveRecord: saveRecord, hasRecord: hasRecord, moveRecord: moveRecord, removeRecord: removeRecord,
-    latestStatus: latestStatus
+    latestStatus: latestStatus, exportBackup: exportBackup
   };
 })();
