@@ -37,6 +37,13 @@ main.kids { width: min(760px, 100%); margin: 0 auto; padding: 20px 16px 56px; }
 .kid-backup { padding: 16px; margin-bottom: 16px; }
 .kid-backup p { margin: 8px 0; }
 .kid-backup button { margin: 4px 0; }
+.kid-backup button:disabled { opacity: 0.55; cursor: not-allowed; }
+.kid-import { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 12px; }
+.kid-import > label { display: block; font-weight: 700; margin-bottom: 8px; }
+.kid-import input[type="file"] { width: 100%; min-width: 0; }
+.kid-import-preview { padding: 12px; margin-top: 12px; background: var(--bg-muted); border-radius: var(--radius-sm); }
+.kid-import-preview h3 { margin: 0; font-size: 1rem; }
+.kid-import-preview li { overflow-wrap: anywhere; }
 
 .kid-picker { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
 .kid-picker label { font-weight: 700; }
